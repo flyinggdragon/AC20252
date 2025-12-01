@@ -7,6 +7,16 @@ public abstract class StateManager<EState> : MonoBehaviour where EState : Enum {
     protected BaseState<EState> currentState;
     protected bool isTransitioningState = false;
 
+    private void OnTriggerEnter(Collider other) {
+        currentState.OnTriggerEnter(other);
+    }
+    private void OnTriggerStay(Collider other) {
+        currentState.OnTriggerStay(other);
+    }
+    private void OnTriggerExit(Collider other) {
+        currentState.OnTriggerExit(other);
+    }
+
     private void Start() {
         currentState.EnterState();
     }
@@ -27,15 +37,5 @@ public abstract class StateManager<EState> : MonoBehaviour where EState : Enum {
         currentState = states[stateKey];
         currentState.EnterState();
         isTransitioningState = false;
-    }
-
-    private void OnTriggerEnter(Collider other) {
-        currentState.OnTriggerEnter(other);
-    }
-    private void OnTriggerStay(Collider other) {
-        currentState.OnTriggerStay(other);
-        }
-    private void OnTriggerExit(Collider other) {
-        currentState.OnTriggerExit(other);
     }
 }
