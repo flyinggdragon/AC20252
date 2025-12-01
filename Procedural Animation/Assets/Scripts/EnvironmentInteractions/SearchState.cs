@@ -7,7 +7,9 @@ public class SearchState : EnvironmentInteractionState {
         EnvironmentInteractionContext Context = context;
     }
 
-    public override void EnterState() { }
+    public override void EnterState() {
+        Debug.Log("Entering Search State");
+    }
     public override void ExitState() { }
     public override void UpdateState() { }
     public override EnvironmentInteractionStateMachine.EEnvironmentInteractionState GetNextState() {
@@ -16,7 +18,9 @@ public class SearchState : EnvironmentInteractionState {
     public override void OnTriggerEnter(Collider other) {
         StartIkTargetPositionTracking(other);
     }
-    public override void OnTriggerStay(Collider other) { }
+    public override void OnTriggerStay(Collider other) {
+        UpdateIkTargetPosition(other);
+    }
     public override void OnTriggerExit(Collider other) {
         ResetIkTargetPositionTracking(other);
     }

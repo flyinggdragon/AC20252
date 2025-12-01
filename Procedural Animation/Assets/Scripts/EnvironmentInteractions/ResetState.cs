@@ -3,15 +3,29 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class ResetState : EnvironmentInteractionState {
+    float _elapsedTime = 0.0f;
+    //Testar valores diferentes.
+    float _resetDuration = 2.0f;
     public ResetState(EnvironmentInteractionContext context, EnvironmentInteractionStateMachine.EEnvironmentInteractionState estate) : base(context, estate) {
         EnvironmentInteractionContext Context = context;
     }
 
-    public override void EnterState() { }
+    public override void EnterState() {
+        _elapsedTime = 0.0f;
+        Context.ClosestPointOnColliderFromShoulder = Vector3.positiveInfinity;
+        Context.CurrentIntersectingCollider = null;
+    }
     public override void ExitState() { }
-    public override void UpdateState() { }
+    public override void UpdateState() {
+        _elapsedTime += Time.deltaTime;
+    }
     public override EnvironmentInteractionStateMachine.EEnvironmentInteractionState GetNextState() {
-        return EnvironmentInteractionStateMachine.EEnvironmentInteractionState.Search;
+        bool isMoving = Context.Rigidbody.linearVelocity != Vector3.zero;
+        
+        if (_elapsedTime >= _resetDuration) {
+            return EnvironmentInteractionStateMachine.EEnvironmentInteractionState.Search;
+        }
+        
         return StateKey;
     }
     public override void OnTriggerEnter(Collider other) { }

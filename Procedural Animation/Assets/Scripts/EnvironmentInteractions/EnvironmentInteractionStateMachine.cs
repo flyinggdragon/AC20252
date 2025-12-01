@@ -22,6 +22,14 @@ public class EnvironmentInteractionStateMachine : StateManager<EnvironmentIntera
     [SerializeField] private Rigidbody _rigidbody;
     [SerializeField] private CapsuleCollider _rootCollider;
 
+    private void OnDrawGizmosSelected() {
+        Gizmos.color = Color.red;
+
+        if (_context != null && _context.ClosestPointOnColliderFromShoulder != null) {
+            Gizmos.DrawSphere(_context.ClosestPointOnColliderFromShoulder, .03f);
+        }
+    }
+
     private void Awake() {
         ValidateConstraints();
 

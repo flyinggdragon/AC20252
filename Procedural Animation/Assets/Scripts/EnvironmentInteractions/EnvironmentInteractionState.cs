@@ -18,16 +18,33 @@ public abstract class EnvironmentInteractionState : BaseState<EnvironmentInterac
             Context.CurrentIntersectingCollider = intersectingCollider;
             Vector3 closestPointFromRoot = GetClosestPointOnCollider(intersectingCollider, Context.RootTransform.position);
             Context.SetCurrentSide(closestPointFromRoot);
+        
+            SetIkTargetPosition();
         }
     }
 
     protected void UpdateIkTargetPosition(Collider intersectingCollider) {
-
+        if (intersectingCollider == Context.CurrentIntersectingCollider) {
+            SetIkTargetPosition();
+        }
     }
 
     protected void ResetIkTargetPositionTracking(Collider intersectingCollider) {
         if (intersectingCollider == Context.CurrentIntersectingCollider) {
             Context.CurrentIntersectingCollider = null;
+            Context.ClosestPointOnColliderFromShoulder = Vector3.positiveInfinity;
         }
+    }
+
+    private void SetIkTargetPosition() {
+        Context.ClosestPointOnColliderFromShoulder = GetClosestPointOnCollider(Context.CurrentIntersectingCollider, new(Context.CurrentShoulderTransform.position.x, Context.CharacterShoulderHeight, Context.CurrentShoulderTransform.position.z));
+
+        Vector3 rayDirection = Context.CurrentShoulderTransform.position - Context.ClosestPointOnColliderFromShoulder;
+        Vector3 normalizedRayDirection = rayDirection.normalized;
+        float offsetDistance = .05f;
+        Vector3 offset = normalizedRayDirection * offsetDistance;
+
+        Vector3 offsetPosition = Context.ClosestPointOnColliderFromShoulder + offset;
+        Context.CurrentIkTargetTransform.position = offsetPosition;
     }
 }
