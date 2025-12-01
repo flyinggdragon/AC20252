@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class ResetState : EnvironmentInteractionState {
     float _elapsedTime = 0.0f;
-    //Testar valores diferentes.
     float _resetDuration = 2.0f;
     public ResetState(EnvironmentInteractionContext context, EnvironmentInteractionStateMachine.EEnvironmentInteractionState estate) : base(context, estate) {
         EnvironmentInteractionContext Context = context;
@@ -21,8 +20,9 @@ public class ResetState : EnvironmentInteractionState {
     }
     public override EnvironmentInteractionStateMachine.EEnvironmentInteractionState GetNextState() {
         bool isMoving = Context.Rigidbody.linearVelocity != Vector3.zero;
+        Debug.Log(Context.Rigidbody.linearVelocity);
         
-        if (_elapsedTime >= _resetDuration) {
+        if (_elapsedTime >= _resetDuration && isMoving) {
             return EnvironmentInteractionStateMachine.EEnvironmentInteractionState.Search;
         }
         
