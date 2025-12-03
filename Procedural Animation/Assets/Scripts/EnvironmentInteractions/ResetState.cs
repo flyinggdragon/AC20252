@@ -5,6 +5,8 @@ using UnityEngine;
 public class ResetState : EnvironmentInteractionState {
     float _elapsedTime = 0.0f;
     float _resetDuration = 2.0f;
+    float _lerpDuration = 10.0f;
+    float _rotationSpeed = 500f;
     public ResetState(EnvironmentInteractionContext context, EnvironmentInteractionStateMachine.EEnvironmentInteractionState estate) : base(context, estate) {
         EnvironmentInteractionContext Context = context;
     }
@@ -17,10 +19,13 @@ public class ResetState : EnvironmentInteractionState {
     public override void ExitState() { }
     public override void UpdateState() {
         _elapsedTime += Time.deltaTime;
+        Context.InteractionPointYOffset = Mathf.Lerp(Context.InteractionPointYOffset, Context.ColliderCenterY, _elapsedTime / _lerpDuration);
+        Context.CurrentIkConstraint.weight = Mathf.Lerp(Context.CurrentIkConstraint.weight, 0, _elapsedTime / _lerpDuration);
+        Context.CurrentMultiRotationConstraint.weight = Mathf.Lerp(Context.CurrentMultiRotationConstraint.weight, 0, _elapsedTime / _lerpDuration);
+        Context.CurrentIkTargetTransform.rotation = Quaternion.RotateTowards(Context.CurrentIkTargetTransform.rotation, Context.OriginalTargetRotation, _rotationSpeed * Time.deltaTime);
     }
     public override EnvironmentInteractionStateMachine.EEnvironmentInteractionState GetNextState() {
         bool isMoving = Context.Rigidbody.linearVelocity != Vector3.zero;
-        Debug.Log(Context.Rigidbody.linearVelocity);
         
         if (_elapsedTime >= _resetDuration && isMoving) {
             return EnvironmentInteractionStateMachine.EEnvironmentInteractionState.Search;

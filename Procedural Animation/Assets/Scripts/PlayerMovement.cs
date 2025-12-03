@@ -4,10 +4,19 @@ using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour {
     private Rigidbody rb;
+    private Animator animator;
     private float speed = 1.5f;
+
+    private bool isWalking;
     
     private void Start () {
         rb = GetComponent<Rigidbody>();
+        animator = GetComponent<Animator>();
+    }
+
+    private void Update() {
+        isWalking = rb.linearVelocity != Vector3.zero;
+        animator.SetBool("isWalking", isWalking);
     }
 
     private void FixedUpdate() {
