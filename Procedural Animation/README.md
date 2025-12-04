@@ -2,7 +2,8 @@
 Criação de um protótipo para testar a implementação de animações procedurais na Unity. O personagem deve enconstar a mão na parede ao se aproximar.
 
 # Links:
-- Vídeo demonstração -> www.youtube.com/watch?v=bCcWzwIzfdQ
+- [Video demonstração](https://www.youtube.com/watch?v=bCcWzwIzfdQ)
+- [Apresentação de Slides](https://github.com/flyinggdragon/AC20252/blob/main/Procedural%20Animation/Animação%20Procedural.pdf)
 
 # Estrutura e Funcionamento:
 Foi criado um cenário para teste com algumas paredes.
