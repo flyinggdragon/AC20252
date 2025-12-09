@@ -4,23 +4,25 @@ using UnityEngine;
 
 [RequireComponent(typeof(AudioSource))]
 public class AudioSpectrum : MonoBehaviour {
-    private AudioSource source;
-    public List<GameObject> objs;
+    private AudioSource _source;
+    public List<Transform> objs;
+    public Transform volumeBar;
+    public bool isMusicPlaying = true;
 
-    private int numSamples = 512;
-    private int numBands = 8;
+    private int _numSamples = 512;
+    private int _numBands = 8;
     public float[] samples;
     public float[] bands;
 
     private void Start() {
-        source = GetComponent<AudioSource>();
+        _source = GetComponent<AudioSource>();
 
-        samples = new float[numSamples];
-        bands = new float[numBands];
+        samples = new float[_numSamples];
+        bands = new float[_numBands];
     }
 
     private void Update() {
-        source.GetSpectrumData(samples, 0, FFTWindow.Blackman);
+        _source.GetSpectrumData(samples, 0, FFTWindow.Blackman);
         GetFrequencyBands();
 
         ResizeObjs();
@@ -29,11 +31,11 @@ public class AudioSpectrum : MonoBehaviour {
     private void GetFrequencyBands() {
         int count = 0;
 
-        for (int i = 0; i < numBands; i++) {
+        for (int i = 0; i < _numBands; i++) {
             float average = 0f;
 
             int sampleCount = (int)Mathf.Pow(2, i) * 2;
-            if (i == numBands - 1) sampleCount += 2;
+            if (i == _numBands - 1) sampleCount += 2;
 
             for (int j = 0; j < sampleCount; j++) {
                 average += samples[count] * (count + 1);
@@ -46,9 +48,21 @@ public class AudioSpectrum : MonoBehaviour {
     }
 
     private void ResizeObjs() {
-        for (int i = 0; i < numBands; i++) {
-            objs[i].transform.localScale = new(bands[i], bands[i], bands[i]);
+        for (int i = 0; i < _numBands; i++) {
+            objs[i].localScale = new(bands[i], bands[i], bands[i]);
         }
+
+        volumeBar.localScale = new(volumeBar.localScale.x, SumOfAllBands() / 2f, volumeBar.localScale.z);
+    }
+
+    public float SumOfAllBands() {
+        float sum = 0f;
+
+        foreach (float b in bands) {
+            sum += b;
+        }
+
+        return sum;
     }
 }
 
