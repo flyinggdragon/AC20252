@@ -14,9 +14,13 @@ public class AudioSpectrum : MonoBehaviour {
     public float[] samples;
     public float[] bands;
 
-    private void Start() {
-        _source = GetComponent<AudioSource>();
+    [SerializeField] public UIUpdate uiUpdate;
 
+    private void Awake() {
+        _source = GetComponent<AudioSource>();
+    }
+
+    private void Start() {
         samples = new float[_numSamples];
         bands = new float[_numBands];
     }
@@ -52,7 +56,11 @@ public class AudioSpectrum : MonoBehaviour {
             objs[i].localScale = new(bands[i], bands[i], bands[i]);
         }
 
-        volumeBar.localScale = new(volumeBar.localScale.x, SumOfAllBands() / 2f, volumeBar.localScale.z);
+        float volume = SumOfAllBands();
+
+        // Dividido por 2f só para caber na tela.
+        volumeBar.localScale = new(volumeBar.localScale.x, volume / 2f, volumeBar.localScale.z);
+        uiUpdate.UpdateVolume(volume);
     }
 
     public float SumOfAllBands() {
